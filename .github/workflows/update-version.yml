@@ -1,7 +1,8 @@
 name: Actualizar versión de WhatsApp
 
-# Ejecuta el scraper a diario y publica el JSON actualizado.
-# Si el scraper no encuentra versión, no cambia nada (last-good).
+# Ejecuta el scraper a diario, publica el JSON actualizado y (si hay versión nueva)
+# envía una notificación push a los usuarios vía OneSignal.
+# Si el scraper no encuentra versión, no cambia nada (last-good) y no notifica.
 
 on:
   schedule:
@@ -14,6 +15,9 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      ONESIGNAL_APP_ID: "5c71d9f7-03c7-4856-bff3-b0b70a54e92a"
+      ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +28,7 @@ jobs:
           python-version: "3.12"
 
       - name: Ejecutar actualizador
+        id: update
         run: python scripts/update_version.py
 
       - name: Commit y push si hay cambios
@@ -37,3 +42,8 @@ jobs:
           else
             echo "Sin cambios que publicar."
           fi
+
+      - name: Notificar a usuarios (OneSignal)
+        # Solo si hay versión NUEVA y existe la clave secreta configurada.
+        if: steps.update.outputs.changed == 'true' && env.ONESIGNAL_REST_API_KEY != ''
+        run: python scripts/notify_onesignal.py "${{ steps.update.outputs.version }}"

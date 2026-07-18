@@ -46,6 +46,27 @@ debe llevar el prefijo `Android ` (8 caracteres) porque la app recorta los 8 pri
    ```
    Esta es la URL que usa la app.
 
+## Notificaciones push inmediatas (OneSignal)
+
+Cuando el scraper detecta una **versión nueva** de WhatsApp, el workflow envía un push
+a todos los usuarios vía OneSignal (la app ya lleva el SDK integrado). Llega al instante,
+incluso a los usuarios con la versión antigua de la app, y los reengancha.
+
+**Para activarlo (una sola vez):**
+
+1. En **OneSignal** → tu app → **Settings → Keys & IDs** → copia la **REST API Key**.
+2. En GitHub → repo `waversion` → **Settings → Secrets and variables → Actions → New repository secret**:
+   - Name: `ONESIGNAL_REST_API_KEY`
+   - Value: (la REST API Key)
+3. Listo. En la próxima versión nueva de WhatsApp que detecte el cron, se enviará el push.
+
+- Si el secret **no** está configurado, el workflow simplemente **no notifica** (no falla).
+- Solo se notifica cuando la versión **cambia** de verdad (nunca se repite el mismo aviso).
+- La frecuencia depende del cron (hoy: diario). Como Uptodown lista versiones estables
+  (~semanales), en la práctica es ~1 aviso por versión estable. Para más inmediatez, sube
+  la frecuencia del cron en `update-version.yml` (p.ej. `0 */6 * * *` = cada 6 h).
+- El texto del push se edita en `scripts/notify_onesignal.py` (bloque `contents`).
+
 ## Actualizar a mano
 
 Edita `whatsapp_variants.json`, haz commit y push. GitHub Pages lo publica solo.

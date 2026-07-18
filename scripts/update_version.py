@@ -8,6 +8,7 @@ ni deja la app sin datos. Esa es justo la lección del backend anterior.
 Se puede ejecutar a mano en cualquier momento:  python scripts/update_version.py
 """
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -52,10 +53,21 @@ def fetch_version():
     return None
 
 
+def emit_output(changed: bool, version: str):
+    """Expone el resultado al workflow de GitHub Actions (para decidir si notificar)."""
+    out = os.environ.get("GITHUB_OUTPUT")
+    if not out:
+        return
+    with open(out, "a", encoding="utf-8") as fh:
+        fh.write(f"changed={'true' if changed else 'false'}\n")
+        fh.write(f"version={version}\n")
+
+
 def main():
     version = fetch_version()
     if not version:
         print("No se obtuvo ninguna versión válida. Se mantiene el JSON actual (last-good).")
+        emit_output(False, "")
         return 0
 
     with open(JSON_PATH, encoding="utf-8") as fh:
@@ -74,6 +86,8 @@ def main():
         print(f"JSON actualizado a la versión {version}.")
     else:
         print(f"El JSON ya estaba en la última versión ({version}). Sin cambios.")
+
+    emit_output(changed, version)
     return 0
 
 
