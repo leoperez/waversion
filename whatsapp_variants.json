@@ -1,0 +1,31 @@
+{
+  "Variants": [
+    {
+      "Version": "2.26.28.70",
+      "arquitectura: ": "arm64-v8a",
+      "version minima de Android: ": "Android 5.0",
+      "screen_dpi: ": "nodpi"
+    },
+    {
+      "Version": "2.26.28.70",
+      "arquitectura: ": "armeabi-v7a",
+      "version minima de Android: ": "Android 5.0",
+      "screen_dpi: ": "nodpi"
+    },
+    {
+      "Version": "2.26.28.70",
+      "arquitectura: ": "x86_64",
+      "version minima de Android: ": "Android 5.0",
+      "screen_dpi: ": "nodpi"
+    }
+  ],
+  "Whats New": [
+    "Novedades de la última versión de WhatsApp",
+    "🔍 Barra de búsqueda mejorada para encontrar chats e historial mucho más rápido.",
+    "🤖 Nuevas funciones con inteligencia artificial integradas en la app.",
+    "📞 Transfiere las llamadas de grupo entre el móvil y el ordenador sin cortar la conversación.",
+    "🚪 Sala de espera para los enlaces de llamada: controla quién entra.",
+    "📌 Fija a un participante en un mosaico más grande durante las videollamadas.",
+    "🔒 Más privacidad para tu número de teléfono."
+  ]
+}
