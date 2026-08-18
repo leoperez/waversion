@@ -73,8 +73,35 @@ def main():
     with open(JSON_PATH, encoding="utf-8") as fh:
         data = json.load(fh)
 
+    variants = data.get("Variants", [])
+    current = variants[0].get("Version") if variants else None
+
+    # GUARDIA DE MONOTONÍA: solo avanzamos si la versión encontrada es ESTRICTAMENTE
+    # mayor que la actual. Las fuentes (p.ej. Uptodown) reportan a veces versiones que
+    # suben y bajan de un día para otro; sin esta guardia el scraper "retrocedía" el
+    # JSON (la app anunciaría una versión MENOR que la real) y disparaba push repetidas
+    # o de retroceso a los usuarios -> percepción de spam -> desuscripciones.
+    if current:
+        try:
+            if _key(version) <= _key(current):
+                print(
+                    f"La versión encontrada ({version}) no es mayor que la actual "
+                    f"({current}). Sin cambios ni notificación."
+                )
+                emit_output(False, version)
+                return 0
+        except (ValueError, TypeError):
+            # Alguna versión no es comparable (JSON editado a mano, formato raro):
+            # no arriesgamos a corromper ni a notificar de más. Mantenemos last-good.
+            print(
+                f"No se pudieron comparar versiones ('{version}' vs '{current}'). "
+                "Sin cambios por seguridad."
+            )
+            emit_output(False, version)
+            return 0
+
     changed = False
-    for variant in data.get("Variants", []):
+    for variant in variants:
         if variant.get("Version") != version:
             variant["Version"] = version
             changed = True
