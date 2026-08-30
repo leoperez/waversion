@@ -1,19 +1,19 @@
 {
   "Variants": [
     {
-      "Version": "2.26.33.76",
+      "Version": "2.26.34.73",
       "arquitectura: ": "arm64-v8a",
       "version minima de Android: ": "Android 5.0",
       "screen_dpi: ": "nodpi"
     },
     {
-      "Version": "2.26.33.76",
+      "Version": "2.26.34.73",
       "arquitectura: ": "armeabi-v7a",
       "version minima de Android: ": "Android 5.0",
       "screen_dpi: ": "nodpi"
     },
     {
-      "Version": "2.26.33.76",
+      "Version": "2.26.34.73",
       "arquitectura: ": "x86_64",
       "version minima de Android: ": "Android 5.0",
       "screen_dpi: ": "nodpi"
